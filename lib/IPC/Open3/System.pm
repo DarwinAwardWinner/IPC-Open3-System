@@ -1,33 +1,26 @@
 package IPC::Open3::System;
 
-use 5.10;
+use 5.10.0;
 use warnings;
 use strict;
 use Carp;
 use utf8;
 use autodie qw( :all );
 
-use version; $VERSION = qv('0.0.1');
+use version; our $VERSION = qv('0.0.1');
 
-# Other recommended modules (uncomment to use):
-#  use Readonly;
-#  no Leading::Zeros; # octal values are compile-time errors
-#  use Util::Any qw(:all);
-#  use IO::All qw( -tie -lock );
-#  use Data::Alias;
-#  use Regexp::Common;
-#  use Regexp::Common::time;
-#  use Regexp::Common::Email::Address;
-
-# Module implementation here
-
-use IPC::Open3;
+use IPC::Open3 ();
 use String::ShellQuote;
 use Symbol 'gensym';
-use List::Flatten qw ( flat );
+use List::Flatten::Recursive qw ( flat );
 use Data::Alias;
 use Moose;
+use namespace::autoclean;
+use base 'Exporter::Simple';
 
+sub open3 : Exportable {
+    return IPC::Open3::System->new(@_);
+}
 
 around BUILDARGS => sub {
     my $orig = shift;
@@ -35,14 +28,21 @@ around BUILDARGS => sub {
 
     my($child_in, $child_out, $child_err);
     $child_err = gensym;
-    alias my @command = flat @_;
-    my $pid = open3($child_in, $child_out, $child_err, @command);
+    my @command = flat @_;
+    my $pid = IPC::Open3::open3($child_in, $child_out, $child_err, @command);
 
+    return $class->$orig(
+        command => [ @command ],
+        pid => $pid,
+        in => $child_in,
+        out => $child_out,
+        err => $child_err,
+    );
 };
-
 
 has 'command' => (
     is => 'ro',
+    isa => 'ArrayRef',
 );
 
 has 'pid' => (
@@ -51,8 +51,18 @@ has 'pid' => (
 );
 
 has 'in' => (
-    is => 'rw',
-    isa => 'Int'
+    is => 'ro',
+    isa => 'FileHandle'
+);
+
+has 'out' => (
+    is => 'ro',
+    isa => 'FileHandle'
+);
+
+has 'err' => (
+    is => 'ro',
+    isa => 'FileHandle'
 );
 
 __PACKAGE__->meta->make_immutable;
@@ -72,13 +82,22 @@ This document describes IPC::Open3::System version 0.0.1
 
 =head1 SYNOPSIS
 
-    use :5.10; # For "say" function
+    use 5.10.0; # For "say" function
     use IPC::Open3::System qw( open3 );
 
     my $command = "cat";
     my $proc = open3($command);
-    say "Subprocess PID: $proc->pid;
-    print {$proc{}}
+
+    # Info about the process
+    say "Started command: ", join " ", @{$proc->command};
+    say "Subprocess PID: $proc->pid";
+
+    # Send some input to the process:
+    print {$proc->in} "INPUT DATA";
+
+    # Read output
+    my @subprocess_output = readline $proc->out;
+    my @subprocess_errors = readline $proc->err;
 
 =for author to fill in:
     Brief code example(s) here showing commonest usage(s).
@@ -92,15 +111,42 @@ This document describes IPC::Open3::System version 0.0.1
     Write a full description of the module and its features here.
     Use subsections (=head2, =head3) as appropriate.
 
-
 =head1 INTERFACE
 
-=for author to fill in:
-    Write a separate section listing the public components of the modules
-    interface. These normally consist of either subroutines that may be
-    exported, or methods that may be called on objects belonging to the
-    classes provided by the module.
+=head2 open3
 
+    This is simply a shortcut for B<IPC::Open3::System->new>. The
+    syntax is similar to the builtin B<system>. It creates and returns
+    a "process" object corresponding to the execution of the command
+    you specified. This object is simply a wrapper for the following fields:
+
+=head2 new
+
+    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin B<system>
+
+=head1 FIELDS
+
+An IPC::Open3::System object has the following fields. Each can be accessed by a method of the same name (see SYNOPSIS for examples of each).
+
+=over
+
+=item command
+
+The command that was provided to the constructor.
+
+=item pid
+
+The PID of the subprocess that was started.
+
+=item in
+
+=item out
+
+=item err
+
+These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to B<in> and *reading* from B<out> and B<err>.
+
+=back
 
 =head1 DIAGNOSTICS
 
@@ -123,18 +169,6 @@ This document describes IPC::Open3::System version 0.0.1
 [Et cetera, et cetera]
 
 =back
-
-
-=head1 CONFIGURATION AND ENVIRONMENT
-
-=for author to fill in:
-    A full explanation of any configuration system(s) used by the
-    module, including the names and locations of any configuration
-    files, and the meaning of any environment variables or properties
-    that can be set. These descriptions must also include details of any
-    configuration language used.
-
-IPC::Open3::System requires no configuration files or environment variables.
 
 
 =head1 DEPENDENCIES
@@ -162,16 +196,18 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-=for author to fill in:
-    A list of known problems with the module, together with some
-    indication Whether they are likely to be fixed in an upcoming
-    release. Also a list of restrictions on the features the module
-    does provide: data types that cannot be handled, performance issues
-    and the circumstances in which they may arise, practical
-    limitations on the size of data sets, special cases that are not
-    (yet) handled, etc.
+=head2 Syntax-compatibility with builtin B<system>
 
-No bugs have been reported.
+For most inputs, B<open3> (and B<new>) should end up executing the
+same command as perl's builtin B<system>. However, this is not
+thoroughly tested.
+
+=head2 Angle-operator syntax oddities
+
+You have to read from a process object's filehandles using B<readline>
+instead of the usual angle operators, because the right angle bracket
+of the method call arrow ('->') confuses perl, which is already
+looking for the end of the angle operator.
 
 Please report any bugs or feature requests to
 C<rct+perlbug@thompsonclan.org>.
