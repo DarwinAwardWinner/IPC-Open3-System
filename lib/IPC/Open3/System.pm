@@ -1,14 +1,9 @@
-package IPC::Open3::System;
-
 use 5.10.0;
 use warnings;
 use strict;
 use Carp;
 use utf8;
 use autodie qw( :all );
-
-use version; our $VERSION = qv('0.0.1');
-
 use IPC::Open3 ();
 use String::ShellQuote;
 use Symbol 'gensym';
@@ -16,8 +11,11 @@ use List::Flatten::Recursive qw ( flat );
 use Data::Alias;
 use Moose;
 use namespace::autoclean;
-use base 'Exporter::Simple';
 
+package IPC::Open3::System;
+# ABSTRACT: Provide an C<open3> function with the same syntax as C<system>
+
+use base 'Exporter::Simple';
 sub open3 : Exportable {
     return IPC::Open3::System->new(@_);
 }
@@ -69,16 +67,6 @@ __PACKAGE__->meta->make_immutable;
 
 1; # Magic true value required at end of module
 __END__
-
-=head1 NAME
-
-IPC::Open3::System - Provide an C<open3> function with the same syntax as C<system>
-
-
-=head1 VERSION
-
-This document describes IPC::Open3::System version 0.0.1
-
 
 =head1 SYNOPSIS
 
@@ -200,7 +188,7 @@ None reported.
 
 For most inputs, B<open3> (and B<new>) should end up executing the
 same command as perl's builtin B<system>. However, this is not
-thoroughly tested.
+thoroughly tested. Test cases are appreciated.
 
 =head2 Angle-operator syntax oddities
 
@@ -211,19 +199,6 @@ looking for the end of the angle operator.
 
 Please report any bugs or feature requests to
 C<rct+perlbug@thompsonclan.org>.
-
-
-=head1 AUTHOR
-
-Ryan C. Thompson  C<< <rct@thompsonclan.org> >>
-
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright (c) 2010, Ryan C. Thompson C<< <rct@thompsonclan.org> >>. All rights reserved.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
 
 
 =head1 DISCLAIMER OF WARRANTY
