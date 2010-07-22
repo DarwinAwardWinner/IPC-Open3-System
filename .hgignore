@@ -16,3 +16,4 @@ doc-pak/*
 ignore.txt
 description-pak
 MANIFEST
+.build

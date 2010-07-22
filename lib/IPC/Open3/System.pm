@@ -1,19 +1,20 @@
 use 5.10.0;
 use warnings;
 use strict;
+
+package IPC::Open3::System;
+# ABSTRACT: Provide an C<open3> function with the same syntax as C<system>
+
+use Any::Moose;
+use namespace::autoclean;
+
 use Carp;
 use utf8;
 use autodie qw( :all );
 use IPC::Open3 ();
 use String::ShellQuote;
-use Symbol 'gensym';
-use List::Flatten::Recursive qw ( flat );
-use Data::Alias;
-use Moose;
-use namespace::autoclean;
-
-package IPC::Open3::System;
-# ABSTRACT: Provide an C<open3> function with the same syntax as C<system>
+use Symbol;
+use List::Flatten::Recursive;
 
 use base 'Exporter::Simple';
 sub open3 : Exportable {
@@ -25,8 +26,8 @@ around BUILDARGS => sub {
     my $class = shift;
 
     my($child_in, $child_out, $child_err);
-    $child_err = gensym;
-    my @command = flat @_;
+    $child_err = Symbol::gensym();
+    my @command = List::Flatten::Recursive::flat(@_);
     my $pid = IPC::Open3::open3($child_in, $child_out, $child_err, @command);
 
     return $class->$orig(
