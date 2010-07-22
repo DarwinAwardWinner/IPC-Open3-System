@@ -17,3 +17,4 @@ ignore.txt
 description-pak
 MANIFEST
 .build
+IPC-Open-System-*
