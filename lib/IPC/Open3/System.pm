@@ -182,7 +182,6 @@ None.
 
 None reported.
 
-
 =head1 BUGS AND LIMITATIONS
 
 =head2 Syntax-compatibility with builtin B<system>
@@ -197,6 +196,11 @@ You have to read from a process object's filehandles using B<readline>
 instead of the usual angle operators, because the right angle bracket
 of the method call arrow ('->') confuses perl, which is already
 looking for the end of the angle operator.
+
+=head2 Naming
+
+The name of this module stinks. I can't think of a more descriptive
+name. Suggestions are welcome.
 
 Please report any bugs or feature requests to
 C<rct+perlbug@thompsonclan.org>.
