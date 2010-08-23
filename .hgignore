@@ -18,3 +18,4 @@ description-pak
 MANIFEST
 .build
 IPC-Open3-System-*
+.build-timestamp
