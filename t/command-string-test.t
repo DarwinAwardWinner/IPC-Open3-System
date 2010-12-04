@@ -35,13 +35,8 @@ if ($perlbin) {
     eq_or_diff($message_out, $message, 'read message from STDOUT');
     eq_or_diff($message_err, $message, 'read message from STDERR');
 
-
-
     done_testing();
 }
 else {
     plan skip_all => "Cannot find perl binary";
 }
-
-
-
