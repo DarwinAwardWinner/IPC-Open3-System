@@ -88,34 +88,33 @@ __END__
     my @subprocess_output = readline $proc->out;
     my @subprocess_errors = readline $proc->err;
 
-=for author to fill in:
-    Brief code example(s) here showing commonest usage(s).
-    This section will be as far as many users bother reading
-    so make it as educational and exeplary as possible.
-
-
 =head1 DESCRIPTION
 
-=for author to fill in:
-    Write a full description of the module and its features here.
-    Use subsections (=head2, =head3) as appropriate.
+This is yet another module for running a program and communicating
+with it. I couldn't find any modules out there with a sane interface
+for running a subprocess and returning *all three* of its handles:
+STDIN, STDOUT, and STDERR, so I wrote one.
 
 =head1 INTERFACE
 
 =head2 open3
 
     This is simply a shortcut for C<IPC::Open3::System->new>. The
-    syntax is similar to the builtin C<system>. It creates and returns
-    a "process" object corresponding to the execution of the command
-    you specified. This object is simply a wrapper for the following fields:
+    syntax is similar to perl's builtin C<system>. It creates and
+    returns a "process" object for the subprocess that it spawns. The
+    object is simply a container for the subprocess's filehandles,
+    which are describe below, under FIELDS.
 
 =head2 new
 
-    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin C<system>
+    The OO constructor for IPC::Open3::System. Pass it the same
+    arguments that you would pass to the builtin C<system>.
 
 =head1 FIELDS
 
-An IPC::Open3::System object has the following fields. Each can be accessed by a method of the same name (see SYNOPSIS for examples of each).
+An IPC::Open3::System object has the following fields. Each can be
+accessed by a method of the same name (see SYNOPSIS for examples of
+each).
 
 =over
 
@@ -133,32 +132,12 @@ The PID of the subprocess that was started.
 
 =item err
 
-These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to C<in> and *reading* from C<out> and C<err>.
+These three fields correspond, respectively, to the child process's
+STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your
+perl script) will be *writing* to C<in> and *reading* from C<out> and
+C<err>.
 
 =back
-
-=head1 DIAGNOSTICS
-
-=for author to fill in:
-    List every single error and warning message that the module can
-    generate (even the ones that will "never happen"), with a full
-    explanation of each problem, one or more likely causes, and any
-    suggested remedies.
-
-=over
-
-=item C<< Error message here, perhaps with %s placeholders >>
-
-[Description of error here]
-
-=item C<< Another error message here >>
-
-[Description of error here]
-
-[Et cetera, et cetera]
-
-=back
-
 
 =head1 DEPENDENCIES
 

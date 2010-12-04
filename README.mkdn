@@ -17,26 +17,33 @@
     my @subprocess_output = readline $proc->out;
     my @subprocess_errors = readline $proc->err;
 
-
-
 # DESCRIPTION
+
+This is yet another module for running a program and communicating
+with it. I couldn't find any modules out there with a sane interface
+for running a subprocess and returning *all three* of its handles:
+STDIN, STDOUT, and STDERR, so I wrote one.
 
 # INTERFACE
 
 ## open3
 
-    This is simply a shortcut for B<IPC::Open3::System->new>. The
-    syntax is similar to the builtin B<system>. It creates and returns
-    a "process" object corresponding to the execution of the command
-    you specified. This object is simply a wrapper for the following fields:
+    This is simply a shortcut for C<IPC::Open3::System->new>. The
+    syntax is similar to perl's builtin C<system>. It creates and
+    returns a "process" object for the subprocess that it spawns. The
+    object is simply a container for the subprocess's filehandles,
+    which are describe below, under FIELDS.
 
 ## new
 
-    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin B<system>
+    The OO constructor for IPC::Open3::System. Pass it the same
+    arguments that you would pass to the builtin C<system>.
 
 # FIELDS
 
-An IPC::Open3::System object has the following fields. Each can be accessed by a method of the same name (see SYNOPSIS for examples of each).
+An IPC::Open3::System object has the following fields. Each can be
+accessed by a method of the same name (see SYNOPSIS for examples of
+each).
 
 - command
 
@@ -52,21 +59,10 @@ The PID of the subprocess that was started.
 
 - err
 
-These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to __in__ and *reading* from __out__ and __err__.
-
-# DIAGNOSTICS
-
-- `Error message here, perhaps with %s placeholders`
-
-[Description of error here]
-
-- `Another error message here`
-
-[Description of error here]
-
-[Et cetera, et cetera]
-
-
+These three fields correspond, respectively, to the child process's
+STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your
+perl script) will be *writing* to `in` and *reading* from `out` and
+`err`.
 
 # DEPENDENCIES
 
@@ -80,15 +76,15 @@ None reported.
 
 # BUGS AND LIMITATIONS
 
-## Syntax-compatibility with builtin B<system>
+## Syntax-compatibility with builtin C<system>
 
-For most inputs, __open3__ (and __new__) should end up executing the
-same command as perl's builtin __system__. However, this is not
+For most inputs, `open3` (and `new`) should end up executing the
+same command as perl's builtin `system`. However, this is not
 thoroughly tested. Test cases are appreciated.
 
 ## Angle-operator syntax oddities
 
-You have to read from a process object's filehandles using __readline__
+You have to read from a process object's filehandles using `readline`
 instead of the usual angle operators, because the right angle bracket
 of the method call arrow ('->') confuses perl, which is already
 looking for the end of the angle operator.
