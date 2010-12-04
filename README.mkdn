@@ -1,0 +1,127 @@
+# SYNOPSIS
+
+    use 5.10.0; # For "say" function
+    use IPC::Open3::System qw( open3 );
+
+    my $command = "cat";
+    my $proc = open3($command);
+
+    # Info about the process
+    say "Started command: ", join " ", @{$proc->command};
+    say "Subprocess PID: $proc->pid";
+
+    # Send some input to the process:
+    print {$proc->in} "INPUT DATA";
+
+    # Read output
+    my @subprocess_output = readline $proc->out;
+    my @subprocess_errors = readline $proc->err;
+
+
+
+# DESCRIPTION
+
+# INTERFACE
+
+## open3
+
+    This is simply a shortcut for B<IPC::Open3::System->new>. The
+    syntax is similar to the builtin B<system>. It creates and returns
+    a "process" object corresponding to the execution of the command
+    you specified. This object is simply a wrapper for the following fields:
+
+## new
+
+    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin B<system>
+
+# FIELDS
+
+An IPC::Open3::System object has the following fields. Each can be accessed by a method of the same name (see SYNOPSIS for examples of each).
+
+- command
+
+The command that was provided to the constructor.
+
+- pid
+
+The PID of the subprocess that was started.
+
+- in
+
+- out
+
+- err
+
+These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to __in__ and *reading* from __out__ and __err__.
+
+# DIAGNOSTICS
+
+- `Error message here, perhaps with %s placeholders`
+
+[Description of error here]
+
+- `Another error message here`
+
+[Description of error here]
+
+[Et cetera, et cetera]
+
+
+
+# DEPENDENCIES
+
+None.
+
+
+
+# INCOMPATIBILITIES
+
+None reported.
+
+# BUGS AND LIMITATIONS
+
+## Syntax-compatibility with builtin B<system>
+
+For most inputs, __open3__ (and __new__) should end up executing the
+same command as perl's builtin __system__. However, this is not
+thoroughly tested. Test cases are appreciated.
+
+## Angle-operator syntax oddities
+
+You have to read from a process object's filehandles using __readline__
+instead of the usual angle operators, because the right angle bracket
+of the method call arrow ('->') confuses perl, which is already
+looking for the end of the angle operator.
+
+## Naming
+
+The name of this module stinks. I can't think of a more descriptive
+name. Suggestions are welcome.
+
+Please report any bugs or feature requests to
+`rct+perlbug@thompsonclan.org`.
+
+
+
+# DISCLAIMER OF WARRANTY
+
+BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
+FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
+OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
+PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
+YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
+NECESSARY SERVICING, REPAIR, OR CORRECTION.
+
+IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
+WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
+REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
+LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
+OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
+THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
+RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
+FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
+SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGES.
