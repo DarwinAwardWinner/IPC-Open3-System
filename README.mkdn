@@ -29,7 +29,7 @@ STDIN, STDOUT, and STDERR, so I wrote one.
 ## open3
 
     This is simply a shortcut for C<IPC::Open3::System->new>. The
-    syntax is similar to perl's builtin C<system>. It creates and
+    syntax is similar to Perl's builtin C<system>. It creates and
     returns a "process" object for the subprocess that it spawns. The
     object is simply a container for the subprocess's filehandles,
     which are describe below, under FIELDS.
@@ -61,14 +61,22 @@ The PID of the subprocess that was started.
 
 These three fields correspond, respectively, to the child process's
 STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your
-perl script) will be *writing* to `in` and *reading* from `out` and
+Perl script) will be *writing* to `in` and *reading* from `out` and
 `err`.
 
 # DEPENDENCIES
 
-None.
+- autodie
 
+- IPC::Open3
 
+This module is really a wrapper around `IPC::Open3`.
+
+- String::ShellQuote;
+
+- List::Flatten::Recursive
+
+This is my own module. Not yet on CPAN.
 
 # INCOMPATIBILITIES
 
@@ -76,18 +84,22 @@ None reported.
 
 # BUGS AND LIMITATIONS
 
-## Syntax-compatibility with builtin C<system>
+## Syntax-compatibility with builtin system
 
 For most inputs, `open3` (and `new`) should end up executing the
-same command as perl's builtin `system`. However, this is not
+same command as Perl's builtin `system`. However, this is not
 thoroughly tested. Test cases are appreciated.
 
 ## Angle-operator syntax oddities
 
 You have to read from a process object's filehandles using `readline`
-instead of the usual angle operators, because the right angle bracket
-of the method call arrow ('->') confuses perl, which is already
-looking for the end of the angle operator.
+instead of the usual angle operators, because you can't put
+complicated things inside Perl's angle operator. Alternatively, you
+can assign the filehandles to variables and then use those variables
+as normal:
+
+    my $out = $proc->out;
+    my $output = <$out>;
 
 ## Naming
 
