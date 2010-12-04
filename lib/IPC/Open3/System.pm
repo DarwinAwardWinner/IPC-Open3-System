@@ -104,14 +104,14 @@ __END__
 
 =head2 open3
 
-    This is simply a shortcut for B<IPC::Open3::System->new>. The
-    syntax is similar to the builtin B<system>. It creates and returns
+    This is simply a shortcut for C<IPC::Open3::System->new>. The
+    syntax is similar to the builtin C<system>. It creates and returns
     a "process" object corresponding to the execution of the command
     you specified. This object is simply a wrapper for the following fields:
 
 =head2 new
 
-    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin B<system>
+    The OO constructor for IPC::Open3::System. Pass it the same arguments that you would pass to the builtin C<system>
 
 =head1 FIELDS
 
@@ -133,7 +133,7 @@ The PID of the subprocess that was started.
 
 =item err
 
-These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to B<in> and *reading* from B<out> and B<err>.
+These three fields correspond, respectively, to the child process's STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your perl script) will be *writing* to C<in> and *reading* from C<out> and C<err>.
 
 =back
 
@@ -184,15 +184,15 @@ None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-=head2 Syntax-compatibility with builtin B<system>
+=head2 Syntax-compatibility with builtin C<system>
 
-For most inputs, B<open3> (and B<new>) should end up executing the
-same command as perl's builtin B<system>. However, this is not
+For most inputs, C<open3> (and C<new>) should end up executing the
+same command as perl's builtin C<system>. However, this is not
 thoroughly tested. Test cases are appreciated.
 
 =head2 Angle-operator syntax oddities
 
-You have to read from a process object's filehandles using B<readline>
+You have to read from a process object's filehandles using C<readline>
 instead of the usual angle operators, because the right angle bracket
 of the method call arrow ('->') confuses perl, which is already
 looking for the end of the angle operator.
