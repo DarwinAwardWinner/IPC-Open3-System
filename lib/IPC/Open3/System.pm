@@ -12,7 +12,6 @@ use Carp;
 use utf8;
 use autodie qw( :all );
 use IPC::Open3 ();
-use String::ShellQuote;
 use Symbol;
 use List::Flatten::Recursive;
 
@@ -100,7 +99,7 @@ STDIN, STDOUT, and STDERR, so I wrote one.
 =head2 open3
 
     This is simply a shortcut for C<IPC::Open3::System->new>. The
-    syntax is similar to perl's builtin C<system>. It creates and
+    syntax is similar to Perl's builtin C<system>. It creates and
     returns a "process" object for the subprocess that it spawns. The
     object is simply a container for the subprocess's filehandles,
     which are describe below, under FIELDS.
@@ -134,47 +133,51 @@ The PID of the subprocess that was started.
 
 These three fields correspond, respectively, to the child process's
 STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your
-perl script) will be *writing* to C<in> and *reading* from C<out> and
+Perl script) will be *writing* to C<in> and *reading* from C<out> and
 C<err>.
 
 =back
 
 =head1 DEPENDENCIES
 
-=for author to fill in:
-    A list of all the other modules that this module relies upon,
-    including any restrictions on versions, and an indication whether
-    the module is part of the standard Perl distribution, part of the
-    module's distribution, or must be installed separately. ]
+=over
 
-None.
+=item autodie
 
+=item IPC::Open3
+
+This module is really a wrapper around C<IPC::Open3>.
+
+=item String::ShellQuote;
+
+=item List::Flatten::Recursive
+
+This is my own module. Not yet on CPAN.
+
+=back
 
 =head1 INCOMPATIBILITIES
-
-=for author to fill in:
-    A list of any modules that this module cannot be used in conjunction
-    with. This may be due to name conflicts in the interface, or
-    competition for system or program resources, or due to internal
-    limitations of Perl (for example, many modules that use source code
-    filters are mutually incompatible).
 
 None reported.
 
 =head1 BUGS AND LIMITATIONS
 
-=head2 Syntax-compatibility with builtin C<system>
+=head2 Syntax-compatibility with builtin system
 
 For most inputs, C<open3> (and C<new>) should end up executing the
-same command as perl's builtin C<system>. However, this is not
+same command as Perl's builtin C<system>. However, this is not
 thoroughly tested. Test cases are appreciated.
 
 =head2 Angle-operator syntax oddities
 
 You have to read from a process object's filehandles using C<readline>
-instead of the usual angle operators, because the right angle bracket
-of the method call arrow ('->') confuses perl, which is already
-looking for the end of the angle operator.
+instead of the usual angle operators, because you can't put
+complicated things inside Perl's angle operator. Alternatively, you
+can assign the filehandles to variables and then use those variables
+as normal:
+
+    my $out = $proc->out;
+    my $output = <$out>;
 
 =head2 Naming
 
