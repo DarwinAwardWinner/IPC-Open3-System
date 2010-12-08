@@ -4,7 +4,7 @@ IPC::Open3::System - Provide an `open3` function with the same syntax as `system
 
 # VERSION
 
-version 0.1.0
+version 0.103420
 
 # SYNOPSIS
 
