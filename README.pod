@@ -1,12 +1,14 @@
-# NAME
+=pod
 
-IPC::Open3::System - Provide an `open3` function with the same syntax as `system`
+=head1 NAME
 
-# VERSION
+IPC::Open3::System - Provide an C<open3> function with the same syntax as C<system>
 
-version 0.103420
+=head1 VERSION
 
-# SYNOPSIS
+version 0.103450
+
+=head1 SYNOPSIS
 
     use 5.10.0; # For "say" function
     use IPC::Open3::System qw( open3 );
@@ -25,16 +27,16 @@ version 0.103420
     my @subprocess_output = readline $proc->out;
     my @subprocess_errors = readline $proc->err;
 
-# DESCRIPTION
+=head1 DESCRIPTION
 
 This is yet another module for running a program and communicating
 with it. I couldn't find any modules out there with a sane interface
 for running a subprocess and returning *all three* of its handles:
 STDIN, STDOUT, and STDERR, so I wrote one.
 
-# INTERFACE
+=head1 INTERFACE
 
-## open3
+=head2 open3
 
     This is simply a shortcut for C<IPC::Open3::System->new>. The
     syntax is similar to Perl's builtin C<system>. It creates and
@@ -42,65 +44,73 @@ STDIN, STDOUT, and STDERR, so I wrote one.
     object is simply a container for the subprocess's filehandles,
     which are describe below, under FIELDS.
 
-## new
+=head2 new
 
     The OO constructor for IPC::Open3::System. Pass it the same
     arguments that you would pass to the builtin C<system>.
 
-# FIELDS
+=head1 FIELDS
 
 An IPC::Open3::System object has the following fields. Each can be
 accessed by a method of the same name (see SYNOPSIS for examples of
 each).
 
-- command
+=over
+
+=item command
 
 The command that was provided to the constructor.
 
-- pid
+=item pid
 
 The PID of the subprocess that was started.
 
-- in
+=item in
 
-- out
+=item out
 
-- err
+=item err
 
 These three fields correspond, respectively, to the child process's
 STDIN, STDOUT, and STDERR. Note that the parent process (i.e. your
-Perl script) will be *writing* to `in` and *reading* from `out` and
-`err`.
+Perl script) will be *writing* to C<in> and *reading* from C<out> and
+C<err>.
 
-# DEPENDENCIES
+=back
 
-- autodie
+=head1 DEPENDENCIES
 
-- IPC::Open3
+=over
 
-This module is really a wrapper around `IPC::Open3`.
+=item autodie
 
-- String::ShellQuote;
+=item IPC::Open3
 
-- List::Flatten::Recursive
+This module is really a wrapper around C<IPC::Open3>.
+
+=item String::ShellQuote;
+
+=item List::Flatten::Recursive
 
 This is my own module. Not yet on CPAN.
 
-# INCOMPATIBILITIES
+=back
+
+=head1 INCOMPATIBILITIES
 
 None reported.
 
-# BUGS AND LIMITATIONS
+=head1 BUGS AND LIMITATIONS
 
-## Syntax-compatibility with builtin system
+=head2 Syntax-compatibility with builtin system
 
-For most inputs, `open3` (and `new`) should end up executing the
-same command as Perl's builtin `system`. However, this is not
+For most inputs, C<open3> (and C<new>) should end up executing the
+same command as Perl's builtin C<system>. However, this is not
 thoroughly tested. Test cases are appreciated.
 
-## Angle-operator syntax oddities
+=head2 Angle-operator syntax oddities
 
-You have to read from a process object's filehandles using `readline`
+You have to read from a process object's filehandles using C<readline>
 instead of the usual angle operators, because you can't put
 complicated things inside Perl's angle operator. Alternatively, you
 can assign the filehandles to variables and then use those variables
@@ -109,15 +119,15 @@ as normal:
     my $out = $proc->out;
     my $output = <$out>;
 
-## Naming
+=head2 Naming
 
 The name of this module stinks. I can't think of a more descriptive
 name. Suggestions are welcome.
 
 Please report any bugs or feature requests to
-`rct+perlbug@thompsonclan.org`.
+C<rct+perlbug@thompsonclan.org>.
 
-# DISCLAIMER OF WARRANTY
+=head1 DISCLAIMER OF WARRANTY
 
 BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
 FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
@@ -140,13 +150,14 @@ FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
 SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGES.
 
-# AUTHOR
+=head1 AUTHOR
 
 Ryan C. Thompson <rct@thompsonclan.org>
 
-# COPYRIGHT AND LICENSE
+=head1 COPYRIGHT AND LICENSE
 
 This software is copyright (c) 2010 by Ryan C. Thompson.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
+
